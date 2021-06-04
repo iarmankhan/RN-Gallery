@@ -43,6 +43,11 @@ const Gallery: React.FC = () => {
             index,
             animated: true
         })
+
+        bottomListRef.current?.scrollToOffset({
+            offset: index * (IMAGE_SIZE + SPACING) - width / 2 + IMAGE_SIZE / 2,
+            animated: true
+        })
     }
 
     useEffect(() => {
@@ -64,11 +69,15 @@ const Gallery: React.FC = () => {
     return <View style={styles.container}>
         <FlatList
             ref={topListRef}
+            bounces={false}
             pagingEnabled
             horizontal
             showsHorizontalScrollIndicator={false}
             data={images}
             keyExtractor={item => item.id.toString()}
+            onMomentumScrollEnd={event => {
+                setActiveSlide(event.nativeEvent.contentOffset.x / width)
+            }}
             renderItem={({item}) => <Image source={{uri: item.src.portrait}} style={styles.mainImage}/>}
         />
 
